@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .container {
+        background-color: lightblue;
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .box {
+        height: 350px;
+        width: 250px;
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        box-sizing: border-box;
+    }
+
+    .search {
+        /* border: 2px solid black; */
+        height: 20%;
+        width: 300px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #image {
+        /* border: 2px solid black; */
+        height: 40%;
+        background-color: white;
+        width: 100%;
+        border-top-right-radius: 5%;
+        border-top-left-radius: 5%;
+    }
+
+    .box {
+        background-color: white;
+        border-bottom-right-radius: 5%;
+        border-bottom-left-radius: 5%;
+        border-radius: 4.8%;
+        text-align: center;
+        text-wrap: wrap;
+        box-sizing: border-box;
+    }
+
+    #sbar {
+        height: 31%;
+        width: 99%;
+        padding: 10px;
+        box-sizing: border-box;
+        color: black;
+        transition: box-shadow 0.3s ease;
+        text-wrap: wrap;
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    #btn {
+        background-color: white;
+        height: 31%;
+        padding: 5px;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    h4 {
+        padding: 5px;
+        color: #333;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    h4:hover {
+        transform: scale(1.1);
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="search">
+            <input type="text" placeholder="enter city" id="sbar">
+            <button id="btn"> SEARCH </button>
+        </div>
+        <div class="box">
+            <img src="skks.png" alt="weather condition" id="image">
+            <h4> CITY : </h4>
+            <p id="cityname"> NULL </p>
+            <h4> TEMPERATION : </h4>
+            <p id="temp"> NULL </p>
+            <h4> HUMIDITY : </h4>
+            <p id="humidity"> NULL </p>
+            <h4> WIND SPEED : </h4>
+            <p id="wind"> NULL </p>
+        </div>
+    </div>
+    <script>
+        //https://api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
+        const xmlrequest = new XMLHttpRequest();
+        let city;
+        let btn = document.getElementById("btn");
+        let sbar = document.getElementById("sbar");
+        let t = document.getElementById("temp");
+        let hum = document.getElementById("humidity");
+        let c = document.getElementById("cityname");
+        let wind = document.getElementById("wind");
+        btn.addEventListener('click', function () {
+            if(sbar.value){
+            city = sbar.value.trim();
+            sbar.value = "";
+            let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=`;
+            xmlrequest.open('GET', url);
+            xmlrequest.onreadystatechange = function (){
+            console.log(xmlrequest.readyState);
+            if (xmlrequest.readyState == 4) {
+                if (xmlrequest.status == 200){
+                   let data = JSON.parse(this.responseText);
+                    console.log(data);
+                    c.innerHTML = city.toUpperCase();
+                    let temp = data.main.temp;
+                    let humidity = data.main.humidity;
+                    let speed = data.wind.speed;
+                    t.innerHTML = temp + "  deg C ";
+                    hum.innerHTML = humidity;
+                    wind.innerHTML = speed;
+                }
+                else{
+                    alert("city not found");
+                }
+            }
+        }
+        }
+        xmlrequest.send();
+        });
+    </script>
+</body>
+
+</html>
